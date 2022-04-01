@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Header } from "./pages/components/header";
+import { Header } from "./components/header";
 
 interface LayoutProps {
   children: ReactNode;
