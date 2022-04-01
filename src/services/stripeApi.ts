@@ -36,30 +36,16 @@ const requestApi = async ({ path, method, body }: RequestApiProps) => {
   }
 };
 
-export const getProducts = async (): Promise<Response> => {
+export const getProducts = async (productId?: string): Promise<Response> => {
   return await requestApi({
-    path: "/products",
+    path: productId ? `/products/${productId}` : "/products",
     method: "GET",
-  })
+  });
 }
 
-export const getProduct = async (productId: string): Promise<Response> => {
+export const getPrices = async (priceId?:string): Promise<Response> => {
   return await requestApi({
-    path: `/products/${productId}`,
-    method: "GET",
-  })
-};
-
-export const getPrices = async (): Promise<Response> => {
-  return await requestApi({
-    path: "/prices",
-    method: "GET"
-  })
-};
-
-export const getPrice = async (priceId: string): Promise<Response> => {
-  return await requestApi({
-    path: `/prices/${priceId}`,
+    path: priceId ? `/prices/${priceId}` : "/prices",
     method: "GET",
   });
 };

@@ -14,4 +14,19 @@ export const useProducts = () => {
   return productList;
 };
 
+export const useProduct = (productId: string) => {
+  const [product, setProduct] = useState<Stripe.Product | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (productId) {
+        const res = await fetch(`/api/products/${productId}`);
+        const json = await res.json();
+        setProduct(json);
+      }
+    })();
+  }, [productId]);
+  return product;
+};
+
 export type ProductList = Stripe.ApiList<Stripe.Product> | null;

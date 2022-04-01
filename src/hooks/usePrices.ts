@@ -14,4 +14,19 @@ export const usePrices = () => {
   return priceList;
 };
 
+export const usePrice = (priceId: string) => {
+  const [price, setPrice] = useState<Stripe.Price | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (priceId) {
+        const res = await fetch(`/api/prices/${priceId}`);
+        const json = await res.json();
+        setPrice(json);
+      }
+    })();
+  }, [priceId]);
+  return price;
+}
+
 export type PriceList = Stripe.ApiList<Stripe.Price> | null;
