@@ -17,7 +17,7 @@ export const createStripeCustomer = functions.auth
       return fireuser;
     } else {
       return doc.set({
-        customer_id: customer.id,
+        customerId: customer.id,
         name: user.displayName,
       });
     }
