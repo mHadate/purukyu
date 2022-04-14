@@ -1,13 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import stripe from "../../../services/stripe";
-import { firestore } from "../../../services/firebase-admin";
-import { Timestamp } from "firebase-admin/firestore";
 import { getPrices, getProducts } from "../../../services/stripeApi";
 import Stripe from "stripe";
 import { v4 as uuid } from "uuid";
-import {StripePayments} from "../../../types/stripe-payments"
-import { getStripeCustomerById, insertStripePayment } from "../../../services/firestore";
+import { StripePayments } from "../../../types/stripe-payments";
+import {
+  getStripeCustomerById,
+  insertStripePayment,
+} from "../../../services/firestore";
 import { sendSlackWebhook } from "../../../services/slack";
 
 export default async function handler(
@@ -32,14 +33,14 @@ method : ${req.method}
 userId : ${userId}
 productId : ${productId}
 priceId : ${priceId}
-staff : ${staff}`
-    await sendSlackWebhook(message)
+staff : ${staff}`;
+    await sendSlackWebhook(message);
     return res.status(500).end();
   }
   const user = await getStripeCustomerById(userId);
 
   if (user == null) {
-    await sendSlackWebhook("チェックアウト時にユーザが確認できませんでした。")
+    await sendSlackWebhook("チェックアウト時にユーザが確認できませんでした。");
     return res.status(500).end();
   }
 
@@ -80,7 +81,7 @@ staff : ${staff}`
     updatedDate: new Date(),
   };
 
-  await insertStripePayment(session.id, doc)
+  await insertStripePayment(session.id, doc);
 
   res.status(200).json({
     url: session.url,
