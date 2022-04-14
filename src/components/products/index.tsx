@@ -19,7 +19,7 @@ export const Products = ({ productList, priceList }: ProductsProps) => (
       productList.data.map((product) => {
         const productId = product.id;
         const price = findPrice(productId, priceList) as Stripe.Price;
-        return (
+        return product.active && (
           <Link
             key={productId}
             passHref
@@ -27,7 +27,8 @@ export const Products = ({ productList, priceList }: ProductsProps) => (
             as={`/products/${productId}`}
           >
             <div className="w-4/12 text-center cursor-pointer">
-              <Image src={product.images[0]} width={250} height={250} alt="" />
+              {product.images[0] ?
+                <Image src={product.images[0]} width={250} height={250} alt="" /> : null}
               <p>{product.name}</p>
               <p>
                 <Price price={price} />

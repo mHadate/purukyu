@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import Stripe from "stripe";
 import { Login } from "../../hooks/authenication";
 import { PriceList } from "../../hooks/usePrices";
@@ -13,10 +13,40 @@ interface ProductProps {
 }
 
 export const Product = ({ user, product, priceList }: ProductProps) => {
+  const [staff, setStaff] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   if (product == null) {
     return null;
   }
+
   const price = findPrice(product.id, priceList);
+
+  const onChangeStaff = (e: ChangeEvent<HTMLInputElement>) => {
+    setStaff(e.target.value);
+  };
+
+  const onClickCheckout = async () => {
+    setLoading(true);
+    const body = {
+      userId: user?.uid,
+      productId: product.id,
+      priceId: price.id,
+      staff,
+    };
+    try {
+      const result = await fetch("/api/payment/checkout", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+      const json = await result.json();
+      setLoading(false);
+      window.location.href = json.url;
+    } catch (e) {
+      setLoading(false);
+      alert("エラーが発生しました");
+    }
+  };
+
   return (
     <div className="bg-white rounded-3xl w-10/12 ml-auto mr-auto pt-20 pb-20">
       <div className="flex flex-wrap">
@@ -34,14 +64,40 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
           <div className="mb-10 text-sm">
             <Description metadata={product.metadata} />
           </div>
+          <div className="mb-10">
+            <label>
+              希望キャスト
+              <input
+                type="text"
+                value={staff}
+                placeholder="例）つくねちゃん"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                onChange={onChangeStaff}
+              />
+            </label>
+          </div>
           {user ? (
-            <button className="bg-pink-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50">
-              購入する
-            </button>
+            loading ? (
+              <button
+                className="bg-pink-400 w-6/12 p-3 text-white text-xl text-center rounded-xl opacity-50 cursor-not-allowed"
+                disabled
+              >
+                <div className="animate-spin h-7 w-7 border-4 border-white rounded-full border-t-transparent ml-auto mr-auto" />
+              </button>
+            ) : (
+              <button
+                className="bg-pink-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!staff}
+                onClick={onClickCheckout}
+              >
+                購入する
+              </button>
+            )
           ) : (
             <button
+              id="twitter"
               onClick={() => Login()}
-              className="bg-blue-400 p-3 text-white text-xl text-center rounded-xl hover:opacity-50"
+              className="bg-blue-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50"
             >
               Twitterでログイン
             </button>
