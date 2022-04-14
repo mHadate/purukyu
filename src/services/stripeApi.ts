@@ -1,5 +1,3 @@
-import stripe from "./stripe"
-
 const BASE_URL = process.env.STRIPE_BASE_URL;
 const headers = {
   Accept: "application/json",
@@ -49,3 +47,5 @@ export const getPrices = async (priceId?:string): Promise<Response> => {
     method: "GET",
   });
 };
+
+// export const payment = async ()
