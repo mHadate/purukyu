@@ -4,3 +4,8 @@ export type User = {
   displayName: string | null;
   photoURL: string | null;
 }
+
+export type StripeCustomerUser = {
+  customerId: string;
+  name: string;
+}
