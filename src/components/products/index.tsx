@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Stripe from "stripe";
-import { PriceList } from "../../hooks/usePrices";
-import { ProductList } from "../../hooks/useProducts";
+import { PriceList } from "../../store/prices";
+import { ProductList } from "../../store/products";
 import { Price, findPrice } from "../price";
 
 interface ProductsProps {

@@ -1,18 +1,40 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { WEBSITE_NAME, DESCRIPTION } from "../../constants";
-import { useProduct } from "../../hooks/useProducts";
-import { usePrices } from "../../hooks/usePrices";
-import { useRouter } from "next/router";
+import { getProduct } from "../../store/products";
+import { getPrices, PriceList } from "../../store/prices";
 import { Product } from "../../components/product";
-import { useAuthentication } from "../../hooks/authenication";
+import { useAuthContext } from "../../context/AuthContext";
+import { ParsedUrlQuery } from "node:querystring";
+import Stripe from "stripe";
 
-const ProductPage: NextPage = () => {
-  const { user } = useAuthentication();
-  const router = useRouter();
-  const { productId } = router.query;
-  const product = useProduct(productId as string);
-  const priceList = usePrices();
+interface ProductPageProps {
+  product: Stripe.Product;
+  priceList: PriceList;
+}
+
+interface QueryParams extends ParsedUrlQuery {
+  productId: string;
+}
+
+export const getServerSideProps: GetStaticProps<
+  ProductPageProps,
+  QueryParams
+> = async ({ params }) => {
+  const [product, priceList] = await Promise.all([
+    getProduct(params!.productId),
+    getPrices(),
+  ]);
+  return {
+    props: {
+      product,
+      priceList,
+    },
+  };
+};
+
+const ProductPage = ({ product, priceList }: ProductPageProps) => {
+  const { user } = useAuthContext();
 
   return (
     <>
@@ -22,11 +44,7 @@ const ProductPage: NextPage = () => {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <div className="flex flex-wrap">
-        <Product
-          product={product}
-          priceList={priceList}
-          user={user}
-        />
+        <Product product={product} priceList={priceList} user={user} />
       </div>
     </>
   );

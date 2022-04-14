@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef, ReactNode, useState } from "react";
-import { Login, Logout, useAuthentication } from "../../hooks/authenication";
+import { useAuthContext } from "../../context/AuthContext";
+import { login, logout } from "../../services/firebase";
 import { User } from "../../types/user";
 
 export const Header = () => {
-  const { user } = useAuthentication();
+  const { user } = useAuthContext();
   return (
     <header id="header">
       <Avator user={user} />
@@ -40,11 +41,16 @@ const Logo = forwardRef(function Logo() {
 });
 
 interface AvatorProps {
-  user: User | null;
+  user: User | null | undefined;
 }
 
 const Avator = ({ user }: AvatorProps) => {
   const [isViewMenu, setIsViewMenu] = useState(false);
+  
+  const onClickLogout = () => {
+    logout()
+    setIsViewMenu(!isViewMenu)
+  }
 
   return (
     <>
@@ -66,9 +72,9 @@ const Avator = ({ user }: AvatorProps) => {
           <div className="relative">
             <div className="absolute right-0 w-36 text-right -bottom-8">
               {user ? (
-                <Button method={Logout}>ログアウト</Button>
+                <Button method={onClickLogout}>ログアウト</Button>
               ) : (
-                <Button method={Login}>ログイン</Button>
+                <Button method={login}>ログイン</Button>
               )}
             </div>
           </div>

@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { PriceList } from "../../hooks/usePrices";
+import { PriceList } from "../../store/prices";
 
 interface PriceProps {
   price: Stripe.Price;
