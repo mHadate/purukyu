@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { forwardRef, ReactNode, useState } from "react";
 import { Login, Logout, useAuthentication } from "../../hooks/authenication";
 import { User } from "../../types/user";
 
@@ -12,18 +12,33 @@ export const Header = () => {
 
       <div className="text-center m-10">
         <Link href="/" passHref>
-          <Image
-            src="/images/logo.png"
-            width={250}
-            height={81}
-            alt=""
-            className="cursor-pointer"
-          />
+          <a>
+            <Image
+              src="/images/logo.png"
+              width={250}
+              height={81}
+              alt=""
+              className="cursor-pointer"
+            />
+          </a>
         </Link>
       </div>
     </header>
   );
 };
+
+const Logo = forwardRef(function Logo() {
+  return (
+    <Image
+      src="/images/logo.png"
+      width={250}
+      height={81}
+      alt=""
+      className="cursor-pointer"
+    />
+  );
+});
+
 interface AvatorProps {
   user: User | null;
 }
@@ -33,14 +48,12 @@ const Avator = ({ user }: AvatorProps) => {
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap justify-end">
+      <div className="mb-6 flex flex-wrap justify-end container mx-auto ">
         <div
           className="flex flex-wrap justify-end items-center p-1 bg-white rounded-full m-2 cursor-pointer"
           onClick={() => setIsViewMenu(!isViewMenu)}
         >
-          {user ? (
-            <div className="mr-4 text-sm  p-3">{user?.displayName}</div>
-          ) : null}
+          {user && <div className="mr-4 text-sm  p-3">{user?.displayName}</div>}
           <Image
             src={user?.photoURL || "/images/icon-twitter.svg"}
             width={35}
@@ -49,18 +62,18 @@ const Avator = ({ user }: AvatorProps) => {
             className="rounded-full cursor-pointer"
           />
         </div>
-      </div>
-      {isViewMenu && (
-        <div className="relative">
-          <div className="absolute right-3 bottom-0 -top-4">
-            {user ? (
-              <Button method={Logout}>ログアウト</Button>
-            ) : (
-              <Button method={Login}>ログイン</Button>
-            )}
+        {isViewMenu && (
+          <div className="relative">
+            <div className="absolute right-0 w-36 text-right -bottom-8">
+              {user ? (
+                <Button method={Logout}>ログアウト</Button>
+              ) : (
+                <Button method={Login}>ログイン</Button>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
@@ -73,7 +86,7 @@ interface ButtonProps {
 const Button = (props: ButtonProps) => (
   <button
     onClick={() => props.method()}
-    className="rounded-lg bg-pink-200 text-white text-sm p-2 cursor-pointer hover:opacity-50"
+    className="rounded-lg bg-pink-200 text-white text-sm p-2 pr-4 pl-4 cursor-pointer hover:opacity-50"
   >
     {props.children}
   </button>
