@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { ChangeEvent, Fragment, useState } from "react";
 import Stripe from "stripe";
-import { Login } from "../../hooks/authenication";
-import { PriceList } from "../../hooks/usePrices";
+import { login } from "../../services/firebase";
+import { PriceList } from "../../store/prices";
 import { User } from "../../types/user";
 import { Price, findPrice } from "../price";
 
 interface ProductProps {
-  user: User | null;
+  user: User | null | undefined;
   product: Stripe.Product | null;
   priceList: PriceList;
 }
@@ -15,7 +15,7 @@ interface ProductProps {
 export const Product = ({ user, product, priceList }: ProductProps) => {
   const [staff, setStaff] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  if (product == null) {
+  if (product == null || !Object.keys(product).length) {
     return null;
   }
 
@@ -33,18 +33,14 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
       priceId: price.id,
       staff,
     };
-    // try {
-      const result = await fetch("/api/payment/checkout", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-      const json = await result.json();
-      setLoading(false);
-      window.location.href = json.url;
-    // } catch (e) {
-    //   setLoading(false);
-    //   alert("エラーが発生しました");
-    // }
+
+    const result = await fetch("/api/payment/checkout", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    const json = await result.json();
+    setLoading(false);
+    window.location.href = json.url;
   };
 
   return (
@@ -64,18 +60,20 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
           <div className="mb-10 text-sm">
             <Description metadata={product.metadata} />
           </div>
-          <div className="mb-10">
-            <label>
-              希望キャスト
-              <input
-                type="text"
-                value={staff}
-                placeholder="例）つくねちゃん"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                onChange={onChangeStaff}
-              />
-            </label>
-          </div>
+          {user && (
+            <div className="mb-10">
+              <label>
+                希望キャスト
+                <input
+                  type="text"
+                  value={staff}
+                  placeholder="例）つくねちゃん"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  onChange={onChangeStaff}
+                />
+              </label>
+            </div>
+          )}
           {user ? (
             loading ? (
               <button
@@ -96,7 +94,7 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
           ) : (
             <button
               id="twitter"
-              onClick={() => Login()}
+              onClick={() => login()}
               className="bg-blue-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50"
             >
               Twitterでログイン

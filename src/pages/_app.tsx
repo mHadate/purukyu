@@ -2,12 +2,27 @@ import type { AppProps } from "next/app";
 import { Layout } from "../layout";
 import "../../styles/globals.css";
 import "../../styles/styles.css";
+import { AuthProvider, AdminAuthProvider } from "../context/AuthContext";
+import { useRouter } from "next/router";
+import AdminLayout from "./admin/layout";
+import { init } from "../services/adminApi";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+  init()
+  const router = useRouter();
+  const pathname = router.pathname;
+  return pathname.match(/^\/admin/) ? (
+    <AdminAuthProvider>
+      <AdminLayout>
+        <Component {...pageProps} />
+      </AdminLayout>
+    </AdminAuthProvider>
+  ) : (
+    <AuthProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </AuthProvider>
   );
 };
 

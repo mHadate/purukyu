@@ -8,6 +8,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     query: { productId },
   } = req;
   const result = await getProducts(productId as string);
+  if (result.status !== 200) {
+    return res.status(result.status).json({})
+  }
   const json = await result.json() as Promise<Stripe.ApiList<Stripe.Product>>
   res.status(200).json(json);
 };
