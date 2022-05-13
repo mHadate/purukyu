@@ -7,7 +7,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export const AdminLayout = ({ children }: LayoutProps) => (
+const AdminLayout = ({ children }: LayoutProps) => (
   <Container>
     <Header />
     <Section>
@@ -15,3 +15,5 @@ export const AdminLayout = ({ children }: LayoutProps) => (
     </Section>
   </Container>
 );
+
+export default AdminLayout
