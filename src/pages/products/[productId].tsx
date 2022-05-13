@@ -1,7 +1,7 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { WEBSITE_NAME, DESCRIPTION } from "../../constants";
-import { getProduct } from "../../store/products";
+import { getProduct, getProducts } from "../../store/products";
 import { getPrices, PriceList } from "../../store/prices";
 import { Product } from "../../components/product";
 import { useAuthContext } from "../../context/AuthContext";
@@ -16,6 +16,17 @@ interface ProductPageProps {
 interface QueryParams extends ParsedUrlQuery {
   productId: string;
 }
+
+export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
+  const productList = await getProducts();
+  if (productList == null) return { paths: [], fallback: false };
+  const paths = productList?.data.map((product) => {
+    return {
+      params: { productId: `/products/${product.id}` }
+    }
+  });
+  return { paths, fallback: false };
+};
 
 export const getServerSideProps: GetStaticProps<
   ProductPageProps,
