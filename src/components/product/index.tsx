@@ -15,7 +15,7 @@ interface ProductProps {
 export const Product = ({ user, product, priceList }: ProductProps) => {
   const [staff, setStaff] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  if (product == null) {
+  if (product == null || !Object.keys(product).length) {
     return null;
   }
 
@@ -33,7 +33,7 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
       priceId: price.id,
       staff,
     };
-    // try {
+
     const result = await fetch("/api/payment/checkout", {
       method: "POST",
       body: JSON.stringify(body),
@@ -41,10 +41,6 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
     const json = await result.json();
     setLoading(false);
     window.location.href = json.url;
-    // } catch (e) {
-    //   setLoading(false);
-    //   alert("エラーが発生しました");
-    // }
   };
 
   return (

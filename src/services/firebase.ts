@@ -1,4 +1,4 @@
-import { FirebaseApp, initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithRedirect,
@@ -30,16 +30,16 @@ const config: FirebaseConfig = {
 
 export const firebaseApp = initializeApp(config);
 
-const provider = new TwitterAuthProvider();
+export const auth = getAuth(firebaseApp);
+
+const twitterProvider = new TwitterAuthProvider();
 
 export const login = (): void => {
-  const auth = getAuth(firebaseApp);
-  signInWithRedirect(auth, provider);
+  signInWithRedirect(auth, twitterProvider);
 };
 
 export const logout = () => {
   return new Promise((resolve, reject) => {
-    const auth = getAuth(firebaseApp);
     signOut(auth)
       .then(() => resolve(true))
       .catch((error) => reject(error));
@@ -47,8 +47,6 @@ export const logout = () => {
 };
 
 export const onAuthStateChanged = (callback: (user: User | null) => void) => {
-  const auth = getAuth(firebaseApp);
-
   onFirebaseAuthStateChanged(auth, (user) => {
     const userInfo: User | null = user
       ? {
