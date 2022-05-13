@@ -4,7 +4,7 @@ import "../../styles/globals.css";
 import "../../styles/styles.css";
 import { AuthProvider, AdminAuthProvider } from "../context/AuthContext";
 import { useRouter } from "next/router";
-import { AdminLayout } from "./admin/layout";
+import AdminLayout from "./admin/layout";
 import { init } from "../services/adminApi";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
