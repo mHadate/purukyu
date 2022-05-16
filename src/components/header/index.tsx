@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { forwardRef, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { useAuthContext } from "../../context/AuthContext";
 import { login, logout } from "../../services/firebase";
 import { User } from "../../types/user";
@@ -27,18 +27,6 @@ export const Header = () => {
     </header>
   );
 };
-
-const Logo = forwardRef(function Logo() {
-  return (
-    <Image
-      src="/images/logo.png"
-      width={250}
-      height={81}
-      alt=""
-      className="cursor-pointer"
-    />
-  );
-});
 
 interface AvatorProps {
   user: User | null | undefined;
