@@ -95,7 +95,7 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
           <button
             id="twitter"
             onClick={() => login()}
-            className="bg-blue-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50"
+            className="bg-blue-400 p-3 w-full text-white text-xl text-center rounded-xl hover:opacity-50"
           >
             Twitterでログイン
           </button>
