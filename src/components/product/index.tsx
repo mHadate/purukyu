@@ -77,14 +77,14 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
         {user ? (
           loading ? (
             <button
-              className="bg-pink-400 w-6/12 p-3 text-white text-xl text-center rounded-xl opacity-50 cursor-not-allowed"
+              className="bg-pink-400 w-full p-3 text-white text-xl text-center rounded-xl opacity-50 cursor-not-allowed"
               disabled
             >
               <div className="animate-spin h-7 w-7 border-4 border-white rounded-full border-t-transparent ml-auto mr-auto" />
             </button>
           ) : (
             <button
-              className="bg-pink-400 w-6/12 p-3 text-white text-xl text-center rounded-xl hover:opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-pink-400 w-full p-3 text-white text-xl text-center rounded-xl hover:opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!staff}
               onClick={onClickCheckout}
             >

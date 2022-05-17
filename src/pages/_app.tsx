@@ -10,7 +10,7 @@ import AdminLayout from "./admin/layout";
 import { init } from "../services/adminApi";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  init()
+  init();
   const router = useRouter();
   const pathname = router.pathname;
   return pathname.match(/^\/admin/) ? (
