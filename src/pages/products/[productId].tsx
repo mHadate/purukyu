@@ -7,6 +7,7 @@ import { Product } from "../../components/product";
 import { useAuthContext } from "../../context/AuthContext";
 import { ParsedUrlQuery } from "node:querystring";
 import Stripe from "stripe";
+import { Columns } from "react-bulma-components";
 
 interface ProductPageProps {
   product: Stripe.Product;
@@ -43,9 +44,9 @@ const ProductPage = ({ product, priceList }: ProductPageProps) => {
         <meta name="description" content={DESCRIPTION} />
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
-      <div className="flex flex-wrap">
+      <Columns className="bg-white rounded-3xl lg:w-4/5 md:w-4/5 sm:w-4/5 ml-auto mr-auto">
         <Product product={product} priceList={priceList} user={user} />
-      </div>
+      </Columns>
     </>
   );
 };

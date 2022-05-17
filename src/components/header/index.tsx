@@ -11,15 +11,14 @@ export const Header = () => {
     <header id="header">
       <Avator user={user} />
 
-      <div className="text-center m-10">
+      <div className="text-center mb-10">
         <Link href="/" passHref>
           <a>
-            <Image
+            <img
               src="/images/logo.png"
-              width={250}
-              height={81}
+              width={200}
               alt=""
-              className="cursor-pointer"
+              className="cursor-pointer ml-auto mr-auto"
             />
           </a>
         </Link>
@@ -34,11 +33,11 @@ interface AvatorProps {
 
 const Avator = ({ user }: AvatorProps) => {
   const [isViewMenu, setIsViewMenu] = useState(false);
-  
+
   const onClickLogout = () => {
-    logout()
-    setIsViewMenu(!isViewMenu)
-  }
+    logout();
+    setIsViewMenu(!isViewMenu);
+  };
 
   return (
     <>

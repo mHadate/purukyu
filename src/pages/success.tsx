@@ -11,13 +11,11 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const uid = query.uid as string | null;
-    console.log(uid);
 
     const postSuccess = async (uid: string) => {
       const body = {
         uid,
       };
-      console.log(body);
       const result = await fetch("/api/payment", {
         method: "POST",
         body: JSON.stringify(body),
