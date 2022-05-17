@@ -47,7 +47,7 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
   return (
     <>
       <Columns.Column>
-        <Image src={product.images[0]} width={400} height={400} alt="" />
+        <img src={product.images[0]} alt="" className="h-80 ml-auto mr-auto" />
       </Columns.Column>
       <Columns.Column>
         <h2 className="text-3xl mb-5">{product.name}</h2>
