@@ -8,7 +8,7 @@ interface LayoutProps {
 export const Layout = (props: LayoutProps) => (
   <>
     <Header />
-    <div className="container mx-auto">
+    <div className="container">
       <>{props.children}</>
     </div>
   </>

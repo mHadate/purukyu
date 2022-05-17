@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 import { WEBSITE_NAME, DESCRIPTION } from "../constants";
 import { getProducts, ProductList } from "../store/products";
@@ -31,9 +30,7 @@ const Home = ({ productList, priceList }: HomeProps) => {
         <meta name="description" content={DESCRIPTION} />
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
-      <div className="flex flex-wrap">
-        <Products productList={productList} priceList={priceList} />
-      </div>
+      <Products productList={productList} priceList={priceList} />
     </>
   );
 };
