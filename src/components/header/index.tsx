@@ -41,7 +41,7 @@ const Avator = ({ user }: AvatorProps) => {
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap justify-end container mx-auto ">
+      <div className="mb-3 flex flex-wrap justify-end container mx-auto ">
         <div
           className="flex flex-wrap justify-end items-center p-1 bg-white rounded-full m-2 cursor-pointer"
           onClick={() => setIsViewMenu(!isViewMenu)}

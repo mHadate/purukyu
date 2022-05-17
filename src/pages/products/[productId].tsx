@@ -44,9 +44,11 @@ const ProductPage = ({ product, priceList }: ProductPageProps) => {
         <meta name="description" content={DESCRIPTION} />
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
-      <Columns className="bg-white rounded-3xl lg:w-4/5 md:w-4/5 sm:w-4/5 ml-auto mr-auto">
-        <Product product={product} priceList={priceList} user={user} />
-      </Columns>
+      <div className="mb-10">
+        <Columns className="bg-white rounded-3xl lg:w-4/5 md:w-4/5 sm:w-4/5 ml-auto mr-auto items-center">
+          <Product product={product} priceList={priceList} user={user} />
+        </Columns>
+      </div>
     </>
   );
 };
