@@ -1,15 +1,12 @@
 import Stripe from "stripe";
-
-const webapp_url = process.env.WEBAPP_URL;
+import stripe from "../services/stripe"
 
 export const getPrices = async (): Promise<PriceList> => {
-  const res = await fetch(`${webapp_url}/api/prices`);
-  return await res.json();
+  return await stripe.prices.list({ limit: 50 })
 };
 
 export const getPrice = async (priceId: string): Promise<Stripe.Price> => {
-  const res = await fetch(`${webapp_url}/api/prices/${priceId}`);
-  return await res.json();
+  return await stripe.prices.retrieve(priceId)
 };
 
 export type PriceList = Stripe.ApiList<Stripe.Price> | null;
