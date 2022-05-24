@@ -13,6 +13,7 @@ export const sendLineNotify = async (data: StripePayments<Date>) => {
   const message = `
 配信注文がありました。
 
+■購入者：${data.name}
 ■商品名：${data.productName}
 ■キャスト：${data.staff}`;
   const body = new URLSearchParams({
