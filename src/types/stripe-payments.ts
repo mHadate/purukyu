@@ -1,5 +1,6 @@
 export type StripePayments<T> = {
   customerId: string;
+  name: string;
   sessionId: string;
   productId: string;
   priceId: string;
