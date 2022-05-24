@@ -5,8 +5,8 @@ import { apiAgent } from "../../services/adminApi";
 import { StripePayments } from "../../types/stripe-payments";
 import { StripeCustomerUser } from "../../types/user";
 
-const START_DATE = new Date("2022-03-01");
-const START_DATE_NUMBER = 202203;
+const START_DATE = new Date("2022-05-01");
+const START_DATE_NUMBER = 202205;
 
 type Sales = {
   [key: string]: StripePayments<Date> & { user: StripeCustomerUser | null };
