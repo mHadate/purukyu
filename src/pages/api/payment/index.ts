@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getStripePayment, setStripePayment } from "../../../services/firestore";
-import { sendSlackWebhook } from "../../../services/slack";
+import { sendLineNotify, sendSlackWebhook } from "../../../services/notification";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,6 +31,7 @@ uid : ${uid}`);
 
   try {
     await setStripePayment(docId, data)
+    await sendLineNotify(data)
   } catch (e) {
     console.error(e);
     await sendSlackWebhook(JSON.stringify(e))
