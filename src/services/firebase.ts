@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithRedirect,
@@ -28,9 +28,11 @@ const config: FirebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
 
-export const firebaseApp = initializeApp(config);
+if (!getApps().length) {
+  initializeApp(config);
+}
 
-export const auth = getAuth(firebaseApp);
+export const auth = getAuth();
 
 const twitterProvider = new TwitterAuthProvider();
 
