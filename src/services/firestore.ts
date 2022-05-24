@@ -50,6 +50,7 @@ const stripePaymentConverter: FirestoreDataConverter<StripePayments<Date>> = {
   toFirestore(stripePayment: StripePayments<Date>): DocumentData {
     return {
       customerId: stripePayment.customerId,
+      name: stripePayment.name,
       sessionId: stripePayment.sessionId,
       productId: stripePayment.productId,
       priceId: stripePayment.priceId,
@@ -67,6 +68,7 @@ const stripePaymentConverter: FirestoreDataConverter<StripePayments<Date>> = {
     const data = snapshot.data();
     return {
       customerId: data.customerId,
+      name: data.name,
       sessionId: data.sessionId,
       productId: data.productId,
       priceId: data.priceId,

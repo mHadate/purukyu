@@ -9,7 +9,7 @@ import {
   getStripeCustomerById,
   insertStripePayment,
 } from "../../../services/firestore";
-import { sendSlackWebhook } from "../../../services/slack";
+import { sendSlackWebhook } from "../../../services/notification";
 
 export default async function handler(
   req: NextApiRequest,
@@ -70,6 +70,7 @@ staff : ${staff}`;
 
   const doc: StripePayments<Date> = {
     customerId: user.customerId,
+    name: user.name,
     sessionId: uid,
     productId,
     priceId,
