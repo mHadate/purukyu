@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import "firebase/auth"
+import "firebase/auth";
 
 interface FirebaseConfig {
   apiKey: string;
@@ -11,7 +11,7 @@ interface FirebaseConfig {
   measurementId: string;
 }
 
-export const getFirebase = () => {
+const getFirebase = () => {
   const config: FirebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
