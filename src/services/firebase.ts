@@ -1,7 +1,7 @@
 import { getApps, initializeApp } from "firebase/app";
 import {
   getAuth,
-  signInWithRedirect,
+  signInWithPopup,
   TwitterAuthProvider,
   signOut,
   onAuthStateChanged as onFirebaseAuthStateChanged,
@@ -37,7 +37,7 @@ export const auth = getAuth();
 const twitterProvider = new TwitterAuthProvider();
 
 export const login = (): void => {
-  signInWithRedirect(auth, twitterProvider);
+  signInWithPopup(auth, twitterProvider);
 };
 
 export const logout = () => {
