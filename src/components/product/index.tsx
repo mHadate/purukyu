@@ -7,6 +7,8 @@ import { User } from "../../types/user";
 import { Price, findPrice } from "../price";
 import { Columns } from "react-bulma-components";
 
+const PHOTO_BOOK_PRODUCT_ID = "prod_OFpMETTNCeamG3";
+
 interface ProductProps {
   user: User | null | undefined;
   product: Stripe.Product | null;
@@ -63,11 +65,11 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
         {user && (
           <div className="mb-10">
             <label>
-              希望キャスト
+              {product.id === PHOTO_BOOK_PRODUCT_ID ? "お客様の配送先住所 氏名" : "希望キャスト"}
               <input
                 type="text"
                 value={staff}
-                placeholder="例）つくねちゃん"
+                placeholder={product.id === PHOTO_BOOK_PRODUCT_ID ? "例）〒160-0021 東京都新宿区歌舞伎町１-３−１５ ザ・カテリーナ 5F 蒼井つくね" : "例）つくねちゃん"}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 onChange={onChangeStaff}
               />
