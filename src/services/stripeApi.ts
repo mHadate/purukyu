@@ -1,3 +1,5 @@
+import Stripe from "stripe";
+import stripe from "./stripe";
 const BASE_URL = process.env.STRIPE_BASE_URL;
 const headers = {
   Accept: "application/json",
@@ -41,11 +43,17 @@ export const getProducts = async (productId?: string): Promise<Response> => {
   });
 }
 
-export const getPrices = async (priceId?:string): Promise<Response> => {
+export const getPrices = async (priceId?: string): Promise<Response> => {
   return await requestApi({
     path: priceId ? `/prices/${priceId}` : "/prices",
     method: "GET",
   });
 };
+
+export const getCustomer = async (customer: string) => {
+  return await stripe.customers.search({
+    query: `name:\'${customer}\'`,
+  })
+}
 
 // export const payment = async ()

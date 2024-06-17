@@ -33,6 +33,8 @@ const stripeCustomerConverter: FirestoreDataConverter<StripeCustomerUser> = {
     return {
       customerId: user.customerId,
       name: user.name,
+      email: user.email,
+      createdDate: user.createdDate
     };
   },
   fromFirestore(
@@ -42,6 +44,8 @@ const stripeCustomerConverter: FirestoreDataConverter<StripeCustomerUser> = {
     return {
       customerId: data.customerId,
       name: data.name,
+      email: data.email,
+      createdDate: data.createdDate
     };
   },
 };
@@ -92,6 +96,26 @@ export const getStripeCustomerById = async (
     .get();
   return ref.data();
 };
+
+export const getStripeCustomerByEmail = async (
+  email: string
+): Promise<StripeCustomerUser | undefined> => {
+  const ref = await firestore.collection(COLLECTION_MAP.stripeCustomers).doc(email).withConverter(stripeCustomerConverter).get()
+  return ref.data();
+}
+
+export const createStripeCustomer = async(
+  customerId: string,
+  customer: string,
+  email: string
+) => {
+  await firestore.collection(COLLECTION_MAP.stripeCustomers).doc(email).withConverter(stripeCustomerConverter).set({
+    customerId,
+    name: customer,
+    email,
+    createdDate: new Date().toISOString()
+  })
+}
 
 export const getStripePayment = async (uid: string) => {
   const snapshot = await firestore

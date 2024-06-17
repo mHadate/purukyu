@@ -1,22 +1,21 @@
-import Image from "next/image";
 import { ChangeEvent, Fragment, useState } from "react";
 import Stripe from "stripe";
-import { login } from "../../services/firebase";
 import { PriceList } from "../../store/prices";
-import { User } from "../../types/user";
 import { Price, findPrice } from "../price";
 import { Columns } from "react-bulma-components";
 
 const PHOTO_BOOK_PRODUCT_ID = "prod_OFpMETTNCeamG3";
 
 interface ProductProps {
-  user: User | null | undefined;
   product: Stripe.Product | null;
   priceList: PriceList;
 }
 
-export const Product = ({ user, product, priceList }: ProductProps) => {
-  const [staff, setStaff] = useState<string>("");
+export const Product = ({ product, priceList }: ProductProps) => {
+  const [staff, setStaff] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailValidate, setEmailValidate] = useState(false);
   const [loading, setLoading] = useState(false);
   if (product == null || !Object.keys(product).length) {
     return null;
@@ -25,16 +24,31 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
   const price = findPrice(product.id, priceList);
 
   const onChangeStaff = (e: ChangeEvent<HTMLInputElement>) => {
-    setStaff(e.target.value);
+    setStaff(e.target.value.trim());
+  };
+
+  const onChangeCustomer = (e: ChangeEvent<HTMLInputElement>) => {
+    setCustomer(e.target.value.trim());
+  };
+
+  const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmailValidate(
+      /^[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)*@([a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$/.test(
+        e.target.value.trim()
+      )
+    );
+    setEmail(e.target.value.trim());
   };
 
   const onClickCheckout = async () => {
     setLoading(true);
+    if (!staff || !customer) return;
     const body = {
-      userId: user?.uid,
       productId: product.id,
       priceId: price.id,
       staff,
+      customer,
+      email
     };
 
     const result = await fetch("/api/payment/checkout", {
@@ -62,22 +76,59 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
         <div className="mb-10 text-sm">
           <Description metadata={product.metadata} />
         </div>
-        {user && (
+        <form method="post" onSubmit={onClickCheckout}>
+          {product.id === PHOTO_BOOK_PRODUCT_ID ? (
+            <div className="mb-10">
+              <label>
+                お客様の配送先住所 氏名
+                <input
+                  type="text"
+                  value={staff}
+                  placeholder="例）〒160-0021 東京都新宿区歌舞伎町１-３−１５ ザ・カテリーナ 5F 蒼井つくね"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  onChange={onChangeStaff}
+                />
+              </label>
+            </div>
+          ) : (
+            <div className="mb-10">
+              <label>
+                希望キャスト
+                <input
+                  type="text"
+                  value={staff}
+                  placeholder="例）つくねちゃん"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  onChange={onChangeStaff}
+                />
+              </label>
+            </div>
+          )}
           <div className="mb-10">
             <label>
-              {product.id === PHOTO_BOOK_PRODUCT_ID ? "お客様の配送先住所 氏名" : "希望キャスト"}
+              ご購入者のお名前
               <input
                 type="text"
-                value={staff}
-                placeholder={product.id === PHOTO_BOOK_PRODUCT_ID ? "例）〒160-0021 東京都新宿区歌舞伎町１-３−１５ ザ・カテリーナ 5F 蒼井つくね" : "例）つくねちゃん"}
+                value={customer}
+                placeholder="例）あさい"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                onChange={onChangeStaff}
+                onChange={onChangeCustomer}
               />
             </label>
           </div>
-        )}
-        {user ? (
-          loading ? (
+          <div className="mb-10">
+            <label>
+              ご購入者のメールアドレス
+              <input
+                type="email"
+                value={email}
+                placeholder="purukyu@example.com"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                onChange={onChangeEmail}
+              />
+            </label>
+          </div>
+          {loading ? (
             <button
               className="bg-pink-400 w-full p-3 text-white text-xl text-center rounded-xl opacity-50 cursor-not-allowed"
               disabled
@@ -87,21 +138,13 @@ export const Product = ({ user, product, priceList }: ProductProps) => {
           ) : (
             <button
               className="bg-pink-400 w-full p-3 text-white text-xl text-center rounded-xl hover:opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!staff}
+              disabled={!staff || !customer || !emailValidate}
               onClick={onClickCheckout}
             >
               購入する
             </button>
-          )
-        ) : (
-          <button
-            id="twitter"
-            onClick={() => login()}
-            className="bg-blue-400 p-3 w-full text-white text-xl text-center rounded-xl hover:opacity-50"
-          >
-            Twitterでログイン
-          </button>
-        )}
+          )}
+        </form>
       </Columns.Column>
     </>
   );
