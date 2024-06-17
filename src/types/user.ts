@@ -8,4 +8,6 @@ export type User = {
 export type StripeCustomerUser = {
   customerId: string;
   name: string;
+  email: string;
+  createdDate: string;
 }

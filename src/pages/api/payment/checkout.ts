@@ -6,50 +6,61 @@ import Stripe from "stripe";
 import { v4 as uuid } from "uuid";
 import { StripePayments } from "../../../types/stripe-payments";
 import {
-  getStripeCustomerById,
+  getStripeCustomerByEmail,
   insertStripePayment,
+  createStripeCustomer
 } from "../../../services/firestore";
 import { sendSlackWebhook } from "../../../services/notification";
+
+async function createUser(customer: string, email: string) {
+  const newUser = await stripe.customers.create({
+    name: customer,
+    email,
+    metadata: {
+      username: customer
+    }
+  })
+  await createStripeCustomer(newUser.id, customer, email)
+  return await getStripeCustomerByEmail(customer)
+}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const {
-    userId,
     productId,
     priceId,
     staff,
+    customer,
+    email
   }: {
-    userId: string;
     productId: string;
     priceId: string;
     staff: string;
+    customer: string;
+    email: string;
   } = JSON.parse(req.body);
-
-  if (req.method !== "POST" || !userId || !productId || !priceId || !staff) {
+  if (req.method !== "POST" || !productId || !priceId || !staff || !customer || !email) {
     const message = `チェックアウトに失敗しました。
 method : ${req.method}
-userId : ${userId}
 productId : ${productId}
 priceId : ${priceId}
-staff : ${staff}`;
+staff : ${staff}
+customer: ${customer}
+email: ${email}`;
     await sendSlackWebhook(message);
     return res.status(500).end();
   }
-  const user = await getStripeCustomerById(userId);
 
-  if (user == null) {
-    await sendSlackWebhook("チェックアウト時にユーザが確認できませんでした。");
-    return res.status(500).end();
-  }
+  const tempUser = await getStripeCustomerByEmail(email)
+  const user = tempUser ?? await createUser(customer, email)
 
   const uid = uuid();
-
   const [session, productRes, priceRes] = await Promise.all([
     stripe.checkout.sessions.create({
       mode: "payment",
-      customer: user.customerId,
+      customer: user?.customerId,
       line_items: [
         {
           price: priceId,
@@ -69,8 +80,8 @@ staff : ${staff}`;
   ]);
 
   const doc: StripePayments<Date> = {
-    customerId: user.customerId,
-    name: user.name,
+    customerId: user?.customerId ?? "not found customer id",
+    name: customer,
     sessionId: uid,
     productId,
     priceId,
